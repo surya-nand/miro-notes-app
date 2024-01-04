@@ -8,7 +8,11 @@ const bodyParser = require("body-parser");
 const app = express();
 dotEnv.config();
 
+const {userRoutes} = require('./routes/userRoutes')
+const {notesRoutes} = require('./routes/notesRoutes')
+
 app.use(cors());
+
 
 // body-parsers to handle incoming requests and 
 // convert them into js objects
@@ -22,9 +26,12 @@ app.get("/", (req, res) => {
     });
 });
 
+userRoutes(app);
+notesRoutes(app);
+
 // Connecting mongoDB database to the server
-app.listen(process.env.PORT, () => {
-    mongoose
+app.listen(process.env.PORT, async() => {
+    await mongoose
       .connect(process.env.MONGO_SERVER, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -32,8 +39,10 @@ app.listen(process.env.PORT, () => {
       .then(() => {
         console.log("Database connected successfully");
       })
-      .catch((error1) => {
-        console.log("DB connection failed", error1);
+      .catch((error) => {
+        console.log("DB connection failed", error);
       });
     console.log(`Server is running on ${process.env.port}`);
   });
+
+module.exports = app;
