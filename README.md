@@ -1,3 +1,8 @@
+## 🚀 Deployed web service link
+
+ **Paste this link on your browser**:  Wait for 10 secs, as free instances will spin down due to inactivity
+ 
+    https://miro-app.onrender.com
 ## 🚀 Project Setup
 To get started with locally running the app, follow these simple steps:
 
