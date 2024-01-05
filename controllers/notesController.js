@@ -152,6 +152,11 @@ const deleteNote = async (req, res) => {
     res.status(200).send({
       message: "Note deleted successfully",
     });
+
+    await notesUsers.findByIdAndUpdate(loggedInUserId, {
+      $pull: { notes: noteId },
+    });
+
   } catch (error) {
     res.status(500).send({
       message: "Error deleting note",
@@ -211,12 +216,17 @@ const searchNotes = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
     const  q  = req.query.q;
+   
     console.log(req.query.q)
+    console.log(loggedInUserId)
 
-    // Use MongoDB's text search to find notes with the keyword
+    // using regular expressing to search for keywords(even partial match)
     const userNotes = await notes.find({
       owner: loggedInUserId,
-      content: { $regex: new RegExp(q, 'i') }, // 'i' for case-insensitive
+      $or: [
+        { content: { $regex: new RegExp(q, 'i') } },
+        { title: { $regex: new RegExp(q, 'i') } }
+      ]
     });
 
     res.status(200).send({
